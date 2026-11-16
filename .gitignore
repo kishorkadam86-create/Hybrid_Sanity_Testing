@@ -1,0 +1,14 @@
+node_modules/
+test-results/
+playwright-report/
+.hybrid/
+backups/
+~$*.xlsx
+
+# Local-only / generated
+screenshots/
+.playwright-mcp/
+.claude/settings.local.json
+*.results-*.xlsx
+.env
+.env.*

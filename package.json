@@ -1,0 +1,27 @@
+{
+  "name": "hybrid-sanity-testing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hybrid (keyword + data-driven Playwright engine + Claude MCP fallback) sanity framework driven by an Excel workbook.",
+  "scripts": {
+    "setup:workbook": "tsx src/cli/setup-workbook.ts",
+    "plan": "tsx src/cli/prepare.ts",
+    "test": "npm run plan && playwright test --pass-with-no-tests",
+    "test:headed": "npm run plan && playwright test --pass-with-no-tests --headed",
+    "report": "playwright show-report",
+    "ai": "tsx src/cli/ai.ts",
+    "typecheck": "tsc --noEmit",
+    "build:sites": "tsx src/cli/build-sites.ts",
+    "env:staging": "tsx src/cli/use-staging.ts",
+    "master": "tsx src/cli/build-master.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  }
+}
