@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "build:sites": "tsx src/cli/build-sites.ts",
     "env:staging": "tsx src/cli/use-staging.ts",
-    "master": "tsx src/cli/build-master.ts"
+    "master": "tsx src/cli/build-master.ts",
+    "report:excel": "tsx src/cli/build-report.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.0",

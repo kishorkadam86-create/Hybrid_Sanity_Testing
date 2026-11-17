@@ -118,7 +118,10 @@ export const SITE_REPO: RepoSeed[] = [
   ['Login Email Error', 'css', '#email-error || #login-form .field.email div.mage-error || #login-form div.mage-error[id*="email"]', '', 'Magento client-side validation'],
   ['Login Password Error', 'css', '#pass-error || #password-login-error || #login-form .field.password div.mage-error || #login-form div.mage-error[id*="pass"]', '', 'Magento client-side validation'],
   ['Mobile Number Input', 'css', '#maincontent #mobile_number || #maincontent #mobilenumber || #maincontent input[name="mobile_number"]', '', 'OTP sign-in (verified 13 Nov)'],
-  ['OTP Button', 'css', '#maincontent button:has-text("Request OTP") || #maincontent button:has-text("Log in")', '', 'OTP sign-in'],
+  ['OTP Button', 'css', '#request-otp-btn || #maincontent .page-request-otp-btn || #maincontent button:has-text("Request OTP") || #maincontent button:has-text("Log in")', '', 'OTP sign-in (ids checked on staging 17 Nov; same in EN and AR)'],
+  ['OTP Input', 'css', '#loginotp:visible || #maincontent .otp-input:visible', '', 'OTP entry: PB / Nanan single field; BinSina / HnB use 6 one-digit boxes'],
+  ['OTP Verify Button', 'css', '#submit-login-otp-btn:visible || #maincontent button:has-text("Verify"):visible', '', 'OTP entry'],
+  ['Logout Link', 'css', 'a[href*="customer/account/logout"]:visible', '', 'Visible only when signed in (language-independent)'],
   ['Mobile Number Error', 'css', '#mobilenumber-error || #mobile_number-error || #maincontent .field div.mage-error', '', 'OTP sign-in validation'],
   ['Social Login', 'text', '/(sign in|connect|login) with (apple|google)|apple login|google login/i', '', 'Social sign-in buttons'],
   ['Register First Name', 'css', 'form.form-create-account #firstname || #firstname', '', 'Magento registration'],
@@ -318,12 +321,17 @@ export function buildSite(s: Site, store: Store = 'en'): { cases: CatalogCase[];
       "An 'enter a valid mobile number' message; no OTP is sent");
     add('Account', 'Mobile number field rejects letters and symbols', 'Negative', 'P2', 'All', 'Sign-in page open', ['Type letters and symbols in the mobile number'], 'Mobile: abc!@#',
       'Letters/symbols cannot be entered, or a validation message is shown');
+    // Test account: SITE_MOBILE / SITE_OTP environment variables (staging test number with a fixed OTP; never in the workbook).
+    const requestOtp: ScriptRow[] = [...otpPrep, ['Type', 'Mobile Number Input', '${env.SITE_MOBILE}'], ['Click', 'OTP Button']];
     add('Account', 'Valid mobile number receives an OTP', 'Positive', 'P1', 'All', 'A test mobile number registered on the site', ['Enter the test mobile number', 'Request the OTP'],
-      'Mobile: ${env.SITE_MOBILE}', 'The OTP screen opens with a resend timer; an SMS arrives');
-    add('Account', 'Sign in with the correct OTP', 'Positive', 'P1', 'All', 'OTP received on the test mobile', ['Enter the OTP', 'Confirm'], 'OTP: from SMS',
-      "The user is signed in and sees 'My Account' / their name");
+      'Mobile: ${env.SITE_MOBILE}', 'The OTP screen opens with a resend timer; an SMS arrives',
+      { script: [...requestOtp, ['VerifyVisible', 'OTP Input', '', 'OTP screen opened']] });
+    add('Account', 'Sign in with the correct OTP', 'Positive', 'P1', 'All', 'OTP received on the test mobile', ['Enter the OTP', 'Confirm'], 'Mobile: ${env.SITE_MOBILE} / OTP: ${env.SITE_OTP}',
+      "The user is signed in and sees 'My Account' / their name",
+      { script: [...requestOtp, ['Type', 'OTP Input', '${env.SITE_OTP}'], ['Click', 'OTP Verify Button'], ['VerifyVisible', 'Logout Link', '', 'Signed in']] });
     add('Account', 'Wrong OTP is rejected', 'Negative', 'P1', 'All', 'OTP screen open for the test mobile', ['Enter 000000', 'Confirm'], 'OTP: 000000',
-      "An 'invalid OTP' message; the user is not signed in");
+      "An 'invalid OTP' message; the user is not signed in",
+      { script: [...requestOtp, ['Type', 'OTP Input', '000000'], ['Click', 'OTP Verify Button'], ['Wait', '', '3000'], ['VerifyNotVisible', 'Logout Link', '', 'Not signed in'], ['VerifyVisible', 'OTP Input', '', 'Still on the OTP screen']] });
     add('Account', 'Expired OTP is rejected and Resend works', 'Negative', 'P2', 'All', 'OTP screen open; wait until the timer ends', ['Enter the old OTP after it expires', 'Tap Resend OTP'], '',
       "An 'OTP expired' message; Resend sends a new code only after the timer");
     add('Account', 'Repeated wrong OTP attempts are limited', 'Negative', 'P2', 'All', 'OTP screen open', ['Enter a wrong OTP 5 times'], 'OTP: 000000 x5',
