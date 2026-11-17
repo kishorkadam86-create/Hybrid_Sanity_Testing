@@ -1,4 +1,6 @@
-// npm run master  ->  docs/Hybrid_QA_Master_TestCases.xlsx
+// npm run master  ->  docs/Hybrid_QA_Master_TestCases.xlsx (all sites) plus one workbook per group:
+//   docs/Hybrid_QA_TestCases_BinSina_HnB.xlsx            BinSina (EN + AR) and Holland & Barrett (EN)
+//   docs/Hybrid_QA_TestCases_PB_Nanan_Superdry.xlsx      Petit Bateau UAE / KSA, Nanan (EN + AR) and Superdry (EN)
 // One consolidated, read-only view of every test case in the store workbooks (workbooks/*.xlsx):
 //   Overview      one row per site + store: staging URL, case counts, priorities, runs, scripted vs AI
 //   All Test Cases every case with its site, store, platforms and whether it is scripted on each platform
@@ -14,6 +16,12 @@ import { openWorkbook, styleHeader, today } from '../workbook';
 import type { TestCase } from '../types';
 
 const OUT = path.join(ROOT, 'docs', 'Hybrid_QA_Master_TestCases.xlsx');
+
+// Per-group test-case workbooks (same layout as the master, limited to the group's sites).
+const GROUPS = [
+  { title: 'BinSina + Holland & Barrett', file: 'Hybrid_QA_TestCases_BinSina_HnB.xlsx', match: /binsina|holland/i },
+  { title: 'Petit Bateau UAE + Petit Bateau KSA + Nanan + Superdry', file: 'Hybrid_QA_TestCases_PB_Nanan_Superdry.xlsx', match: /petit bateau|nanan|superdry/i },
+];
 const SOFT = 'FFE8EEF8';
 
 interface Store {
@@ -46,6 +54,16 @@ async function main() {
   // Site order, English before Arabic.
   stores.sort((a, b) => a.site.localeCompare(b.site) || (a.store === 'English' ? -1 : 1));
 
+  await writeBook(stores, OUT, 'All sites');
+  for (const g of GROUPS) {
+    const picked = stores.filter((s) => g.match.test(s.site));
+    if (!picked.length) throw new Error(`No workbooks found for group "${g.title}"`);
+    await writeBook(picked, path.join(ROOT, 'docs', g.file), g.title);
+  }
+}
+
+async function writeBook(stores: Store[], out: string, title: string) {
+
   const wb = new ExcelJS.Workbook();
   wb.creator = 'Hybrid QA Automation';
   wb.created = new Date();
@@ -70,7 +88,7 @@ async function main() {
   total.eachCell((c) => (c.fill = fill(SOFT)));
   total.getCell(15).numFmt = '0%';
   ov.addRow([]);
-  ov.addRow([`Generated ${today()} from workbooks/ by "npm run master". All URLs are staging; production is never tested. The store workbooks are the source of truth for execution and results.`]).font = { italic: true, color: { argb: 'FF5B6475' } };
+  ov.addRow([`${title}. Generated ${today()} from workbooks/ by "npm run master". All URLs are staging; production is never tested. The store workbooks are the source of truth for execution and results.`]).font = { italic: true, color: { argb: 'FF5B6475' } };
   ov.autoFilter = { from: { row: 1, column: 1 }, to: { row: last, column: ovHead.length } };
 
   // ---------------- All Test Cases ----------------
@@ -109,11 +127,11 @@ async function main() {
   sr.font = { bold: true };
   sr.eachCell((c) => (c.fill = fill(SOFT)));
 
-  fs.mkdirSync(path.dirname(OUT), { recursive: true });
+  fs.mkdirSync(path.dirname(out), { recursive: true });
   wb.calcProperties.fullCalcOnLoad = true;
-  await wb.xlsx.writeFile(OUT);
+  await wb.xlsx.writeFile(out);
   const cases = stores.reduce((a, s) => a + s.cases.length, 0);
-  console.log(`[master] ${relToRoot(OUT)}: ${stores.length} store workbooks, ${cases} test cases, ${sections.length} sections`);
+  console.log(`[master] ${relToRoot(out)} (${title}): ${stores.length} store workbooks, ${cases} test cases, ${sections.length} sections`);
 }
 
 main().catch((e) => {

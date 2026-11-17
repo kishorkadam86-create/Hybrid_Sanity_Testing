@@ -114,7 +114,7 @@ Secrets (never put them in the workbook): `MYSHOP_EMAIL`, `MYSHOP_PASSWORD`, `MY
 | `npm run ai -- promote --tc ... --file ...` | Turn an AI run into keyword steps (optional per-step `platform`) |
 | `npm run build:sites` | Create or top up the store workbooks in `workbooks/` from `src/sites.ts` |
 | `npm run env:staging` | Move older workbooks from production URLs to staging (backs up first) |
-| `npm run master` | Rebuild `docs/Hybrid_QA_Master_TestCases.xlsx`: every test case from all store workbooks, plus per-store and per-section summaries |
+| `npm run master` | Rebuild the consolidated test-case sheets in `docs/`: `Hybrid_QA_Master_TestCases.xlsx` (all sites), `Hybrid_QA_TestCases_BinSina_HnB.xlsx` (BinSina + Holland & Barrett) and `Hybrid_QA_TestCases_PB_Nanan_Superdry.xlsx` (Petit Bateau UAE/KSA, Nanan, Superdry). Each has Overview, All Test Cases and By Section tabs |
 
 **Getting started (VS Code):** clone the repo, run `npm install`, then `npm run plan` with `$env:WORKBOOK='binsina'` (or any site; add `:ar` for the Arabic store). Credentials are never stored in the repo: set them as environment variables (for example `SITE_MOBILE`, `SITE_PASSWORD`).
 
