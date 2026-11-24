@@ -4,6 +4,7 @@ import { fmtDateTime, useIndex, useProject } from './data';
 import { Home } from './Home';
 import { ProjectPage } from './Project';
 import { href, useRoute, type Route } from './router';
+import { RunsProvider } from './Run';
 
 export function App() {
   const route = useRoute();
@@ -16,6 +17,7 @@ export function App() {
   }, [projectId, index.data]);
 
   return (
+    <RunsProvider>
     <div className="app">
       <header className="topbar">
         <a className="brand" href={href([])}>
@@ -52,6 +54,7 @@ export function App() {
         <span>Staging environments only · production is never tested</span>
       </footer>
     </div>
+    </RunsProvider>
   );
 }
 

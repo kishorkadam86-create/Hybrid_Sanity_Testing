@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T00:56:55.694Z",
+  "generatedAt": "2026-11-24T01:28:10.286Z",
   "environment": "Staging",
   "projects": [
     {
@@ -7,6 +7,23 @@
       "name": "BinSina",
       "tagline": "Pharmacy & health",
       "description": "BinSina Pharmacy UAE (English + Arabic) and Holland & Barrett UAE (English)",
+      "websites": [
+        {
+          "key": "binsina",
+          "name": "BinSina Pharmacy UAE",
+          "stores": [
+            "English",
+            "Arabic"
+          ]
+        },
+        {
+          "key": "hnb",
+          "name": "Holland & Barrett UAE",
+          "stores": [
+            "English"
+          ]
+        }
+      ],
       "lastRun": "2026-11-20",
       "totals": {
         "cases": 268,
@@ -22,6 +39,7 @@
       "stores": [
         {
           "key": "BinSina_UAE_Sanity",
+          "runKey": "binsina",
           "site": "BinSina Pharmacy UAE",
           "store": "English",
           "url": "https://mcstaging-ind.binsina.ae/en/",
@@ -38,6 +56,7 @@
         },
         {
           "key": "BinSina_UAE_AR_Sanity",
+          "runKey": "binsina",
           "site": "BinSina Pharmacy UAE",
           "store": "Arabic",
           "url": "https://mcstaging-ind.binsina.ae/ar/",
@@ -54,6 +73,7 @@
         },
         {
           "key": "HollandBarrett_UAE_Sanity",
+          "runKey": "hnb",
           "site": "Holland & Barrett UAE",
           "store": "English",
           "url": "https://mcstaging-ind.hollandandbarrett.ae/en/",
@@ -75,7 +95,40 @@
       "name": "Fashion",
       "tagline": "Fashion & kidswear",
       "description": "Petit Bateau UAE, Petit Bateau KSA, Nanan UAE (English + Arabic) and Superdry UAE (English)",
-      "lastRun": "2026-11-17",
+      "websites": [
+        {
+          "key": "pbae",
+          "name": "Petit Bateau UAE",
+          "stores": [
+            "English",
+            "Arabic"
+          ]
+        },
+        {
+          "key": "pbsa",
+          "name": "Petit Bateau KSA",
+          "stores": [
+            "English",
+            "Arabic"
+          ]
+        },
+        {
+          "key": "nanan",
+          "name": "Nanan UAE",
+          "stores": [
+            "English",
+            "Arabic"
+          ]
+        },
+        {
+          "key": "superdry",
+          "name": "Superdry UAE",
+          "stores": [
+            "English"
+          ]
+        }
+      ],
+      "lastRun": "2026-11-24",
       "totals": {
         "cases": 547,
         "runs": 1599,
@@ -90,6 +143,7 @@
       "stores": [
         {
           "key": "Nanan_UAE_Sanity",
+          "runKey": "nanan",
           "site": "Nanan UAE",
           "store": "English",
           "url": "https://mcstaging.nananuat.com/en/",
@@ -106,6 +160,7 @@
         },
         {
           "key": "Nanan_UAE_AR_Sanity",
+          "runKey": "nanan",
           "site": "Nanan UAE",
           "store": "Arabic",
           "url": "https://mcstaging.nananuat.com/ar/",
@@ -122,6 +177,7 @@
         },
         {
           "key": "PetitBateau_KSA_Sanity",
+          "runKey": "pbsa",
           "site": "Petit Bateau KSA",
           "store": "English",
           "url": "https://mcstaging-ksa.petit-bateauuat.com/en/",
@@ -138,6 +194,7 @@
         },
         {
           "key": "PetitBateau_KSA_AR_Sanity",
+          "runKey": "pbsa",
           "site": "Petit Bateau KSA",
           "store": "Arabic",
           "url": "https://mcstaging-ksa.petit-bateauuat.com/ar/",
@@ -154,6 +211,7 @@
         },
         {
           "key": "PetitBateau_UAE_Sanity",
+          "runKey": "pbae",
           "site": "Petit Bateau UAE",
           "store": "English",
           "url": "https://mcstaging.petit-bateauuat.com/en/",
@@ -170,6 +228,7 @@
         },
         {
           "key": "PetitBateau_UAE_AR_Sanity",
+          "runKey": "pbae",
           "site": "Petit Bateau UAE",
           "store": "Arabic",
           "url": "https://mcstaging.petit-bateauuat.com/ar/",
@@ -186,6 +245,7 @@
         },
         {
           "key": "Superdry_UAE_Sanity",
+          "runKey": "superdry",
           "site": "Superdry UAE",
           "store": "English",
           "url": "https://mcstaging.superdry.ae/",

@@ -49,8 +49,17 @@ export interface Defect {
   date: string;
 }
 
+export interface Website {
+  /** Run key: pbae, pbsa, nanan, superdry, binsina, hnb */
+  key: string;
+  name: string;
+  stores: string[];
+}
+
 export interface StoreSummary {
   key: string;
+  /** Website run key this store belongs to. */
+  runKey: string;
   site: string;
   store: string;
   url: string;
@@ -69,6 +78,7 @@ export interface ProjectMeta {
   name: string;
   tagline: string;
   description: string;
+  websites: Website[];
   lastRun: string | null;
   totals: Totals;
   openDefects: number;

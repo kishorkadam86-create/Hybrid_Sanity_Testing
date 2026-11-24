@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BreakdownTable, Card, Empty, Kpi, Pill, StatusBar, Tag } from './components';
 import { STATUS_ORDER, addTotals, fmtDate, isOpenDefect, passRate, pct, prioRank, sevRank, storeLabel } from './data';
 import { go, href, type Route } from './router';
+import { RunButton, RunsPanel } from './Run';
 import { STATUSES, type Project, type Status, type Store, type TestCase, type Totals } from './types';
 
 const TABS = [
@@ -59,6 +60,7 @@ export function ProjectPage({ project, route }: { project: Project; route: Route
         <div className="page-meta">
           <span className="env-badge">Staging</span>
           <span className="muted">Last run {fmtDate(project.lastRun)}</span>
+          <RunButton project={project} stores={project.stores} />
         </div>
       </header>
 
@@ -83,7 +85,7 @@ export function ProjectPage({ project, route }: { project: Project; route: Route
         ))}
       </div>
 
-      {tab === 'overview' && <Overview stores={stores} totals={totals} openDefects={openDefects.length} onStore={(k) => setParam('store', k)} />}
+      {tab === 'overview' && <Overview project={project} stores={stores} totals={totals} openDefects={openDefects.length} onStore={(k) => setParam('store', k)} />}
       {tab === 'cases' && <Cases stores={stores} route={route} setParam={setParam} />}
       {tab === 'defects' && <Defects defects={defects} />}
       {tab === 'queue' && <Queue stores={stores} />}
@@ -92,7 +94,7 @@ export function ProjectPage({ project, route }: { project: Project; route: Route
 }
 
 // ------------------------------------------------------------------ Overview
-function Overview({ stores, totals, openDefects, onStore }: { stores: Store[]; totals: Totals; openDefects: number; onStore: (key: string) => void }) {
+function Overview({ project, stores, totals, openDefects, onStore }: { project: Project; stores: Store[]; totals: Totals; openDefects: number; onStore: (key: string) => void }) {
   const cases = stores.flatMap((s) => s.cases);
   const platforms = [...new Set(cases.flatMap((c) => c.platforms))];
   const sections = [...new Set(cases.map((c) => c.section || '(none)'))].sort();
@@ -116,6 +118,8 @@ function Overview({ stores, totals, openDefects, onStore }: { stores: Store[]; t
         <StatusBar totals={totals} height={14} legend />
       </Card>
 
+      <RunsPanel project={project} />
+
       <div className="stack">
         <Card title="By store">
           <BreakdownTable
@@ -126,7 +130,15 @@ function Overview({ stores, totals, openDefects, onStore }: { stores: Store[]; t
                   {storeLabel(s)}
                 </button>
               ),
-              extra: <div className="sub"><a href={s.url} target="_blank" rel="noreferrer noopener">{s.url.replace(/^https:\/\//, '')}</a></div>,
+              extra: (
+                <div className="sub">
+                  <a href={s.url} target="_blank" rel="noreferrer noopener">{s.url.replace(/^https:\/\//, '')}</a>
+                  <div className="row-run">
+                    <RunButton project={project} stores={project.stores} site={s.runKey} small
+                      label={`Run ${project.websites.find((w) => w.key === s.runKey)?.name ?? 'website'}`} />
+                  </div>
+                </div>
+              ),
               totals: s.totals,
             }))}
           />

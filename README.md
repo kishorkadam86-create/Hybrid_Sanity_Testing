@@ -130,6 +130,22 @@ Each project has an overview (per store, platform and section), a filterable tes
 
 Vercel project settings: Root Directory `ui`, Framework Vite (see `ui/vercel.json`).
 
+**Run sanity tests from the dashboard:** the **▶ Run sanity tests** button runs a whole project (all Fashion websites, or BinSina + HnB) or one website, with optional platform and priority filters. How it works:
+1. The dashboard calls `ui/api/run.ts`, which checks the run passcode.
+2. That starts the GitHub Actions workflow `.github/workflows/sanity-run.yml`.
+3. The workflow runs `npm run run:site -- <site>` on staging: everything except Account in parallel, then Account (OTP sign-in) with one worker.
+4. It commits the updated workbooks, the dashboard data and the Excel report to `main`, then redeploys the dashboard.
+
+Locally, the same runner is `npm run run:site -- fashion` (or `binsina`, `pbae`, `nanan`, …).
+
+One-time setup:
+- **Vercel** (Project → Settings → Environment Variables):
+  - `GITHUB_TOKEN`: a fine-grained token for this repo with **Actions: Read and write**.
+  - `RUN_PASSCODE`: the passcode testers type.
+- **GitHub** (repo → Settings → Secrets → Actions):
+  - `SITE_MOBILE`, `SITE_OTP`: the OTP test account.
+  - Optional: `SITE_EMAIL` and `SITE_PASSWORD` for Superdry, and `VERCEL_TOKEN` to redeploy after each run.
+
 **Getting started (VS Code):** clone the repo, run `npm install`, then `npm run plan` with `$env:WORKBOOK='binsina'` (or any site; add `:ar` for the Arabic store). Credentials are never stored in the repo: set them as environment variables (for example `SITE_MOBILE`, `SITE_PASSWORD`).
 
 ## 3. Where results go
