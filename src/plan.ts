@@ -7,6 +7,8 @@ import { SHEET, casesSheet, cellText, findSheet, norm, openWorkbook, pick, readT
 export interface Filters {
   tc?: string[];
   section?: string[];
+  /** Sections to leave out (e.g. Account, run separately with one worker). */
+  skipSection?: string[];
   priority?: string[];
   type?: string[];
   /** Raw platform selection, e.g. "Android,iOS" or "Mobile". */
@@ -85,6 +87,7 @@ export async function buildPlan(workbook: string, filters: Filters = {}): Promis
     const priority = pick(r, 'Priority');
     const type = pick(r, 'Test Type', 'Type');
     if (!inList(filters.tc, id) || !inList(filters.section, section) || !inList(filters.priority, priority) || !inList(filters.type, type)) continue;
+    if (filters.skipSection?.length && filters.skipSection.map(norm).includes(norm(section))) continue;
     const platforms = parsePlatforms(pick(r, 'Platform', 'Platforms')).filter((p) => runPlatforms.includes(p));
     if (!platforms.length) continue;
     cases.push({

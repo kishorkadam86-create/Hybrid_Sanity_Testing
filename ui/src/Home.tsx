@@ -1,5 +1,6 @@
 import { Kpi, StatusBar } from './components';
 import { fmtDate, passRate, pct, storeLabel } from './data';
+import { RunButton, RunsPanel } from './Run';
 import { href } from './router';
 import type { Index } from './types';
 
@@ -12,7 +13,7 @@ export function Home({ index }: { index: Index }) {
           <h1>Storefront quality at a glance</h1>
           <p className="lede">
             Results from the hybrid sanity suites (Playwright scripts plus an AI layer) on the <b>staging</b> environments, covering desktop web,
-            Android and iOS mobile web in English and Arabic stores.
+            Android and iOS mobile web in English and Arabic stores. Start a new run for a whole project or a single website.
           </p>
         </div>
       </section>
@@ -20,20 +21,19 @@ export function Home({ index }: { index: Index }) {
       <div className="project-grid">
         {index.projects.map((p) => {
           const executed = p.totals.Pass + p.totals.Fail + p.totals.Blocked;
-          const sites = [...new Set(p.stores.map((s) => s.site))];
           return (
-            <a key={p.id} className={`project-card pc-${p.id}`} href={href([p.id])}>
+            <article key={p.id} className={`project-card pc-${p.id}`}>
               <div className="pc-head">
                 <div>
                   <p className="eyebrow">{p.tagline}</p>
-                  <h2>{p.name}</h2>
+                  <h2><a className="pc-title" href={href([p.id])}>{p.name}</a></h2>
                 </div>
-                <span className="pc-arrow" aria-hidden="true">→</span>
+                <a className="pc-arrow" href={href([p.id])} aria-label={`Open ${p.name}`}>→</a>
               </div>
               <p className="pc-desc">{p.description}</p>
               <div className="chips">
-                {sites.map((s) => (
-                  <span key={s} className="chip">{s}</span>
+                {p.websites.map((w) => (
+                  <span key={w.key} className="chip">{w.name}</span>
                 ))}
               </div>
               <div className="kpi-row">
@@ -51,8 +51,15 @@ export function Home({ index }: { index: Index }) {
                   </li>
                 ))}
               </ul>
-              <p className="pc-foot">Last run {fmtDate(p.lastRun)}</p>
-            </a>
+              <div className="pc-actions">
+                <span className="pc-foot">Last run {fmtDate(p.lastRun)}</span>
+                <span className="pc-buttons">
+                  <a className="btn" href={href([p.id])}>Open project</a>
+                  <RunButton project={p} stores={p.stores} />
+                </span>
+              </div>
+              <RunsPanel project={p} limit={3} />
+            </article>
           );
         })}
       </div>

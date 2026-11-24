@@ -17,7 +17,8 @@
     "report:excel": "tsx src/cli/build-report.ts",
     "ui:data": "tsx src/cli/export-ui-data.ts",
     "ui:dev": "npm run ui:data && npm --prefix ui run dev",
-    "ui:build": "npm run ui:data && npm --prefix ui run build"
+    "ui:build": "npm run ui:data && npm --prefix ui run build",
+    "run:site": "tsx src/cli/run-site.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.0",

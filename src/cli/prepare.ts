@@ -1,6 +1,6 @@
 // npm run plan  ->  reads the workbook and writes .hybrid/plan.json for the Playwright run.
 // Filters (env vars, comma-separated):
-//   TC=TC_001,TC_002   SECTION=Search,Cart   PRIORITY=P1   TYPE=Negative   PLATFORM=Web | Android,iOS | Mobile
+//   TC=TC_001,TC_002   SECTION=Search,Cart   SKIP_SECTION=Account   PRIORITY=P1   TYPE=Negative   PLATFORM=Web | Android,iOS | Mobile
 import { buildPlan } from '../plan';
 import { isScriptedFor, writePlan } from '../plan-file';
 import { relToRoot, resolveWorkbook } from '../paths';
@@ -13,6 +13,7 @@ async function main() {
   const plan = await buildPlan(workbook, {
     tc: list(process.env.TC),
     section: list(process.env.SECTION),
+    skipSection: list(process.env.SKIP_SECTION),
     priority: list(process.env.PRIORITY),
     type: list(process.env.TYPE),
     platform: process.env.PLATFORM,

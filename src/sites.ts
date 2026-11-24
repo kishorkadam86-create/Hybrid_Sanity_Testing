@@ -156,9 +156,14 @@ const STAGING = 'TEST/STAGING ENVIRONMENT ONLY (payment provider in test mode). 
 
 type ScriptRow = [keyword: string, target?: string, value?: string, description?: string, platform?: string];
 
-/** Build the test cases and keyword steps for one site. */
 /** Production hosts of all sites: runs must never touch these. */
 export const PROD_HOSTS = SITES.map((s) => s.prodHost.toLowerCase());
+
+/** Dashboard / run projects: which websites belong to each. */
+export const PROJECT_SITES: Record<'binsina' | 'fashion', string[]> = {
+  binsina: ['binsina', 'hnb'],
+  fashion: ['pbae', 'pbsa', 'nanan', 'superdry'],
+};
 
 /** Workbook file for a site's store: the English store keeps the base name, Arabic adds "_AR". */
 export const storeFile = (s: Site, store: Store) => (store === 'ar' ? s.file.replace(/_Sanity\.xlsx$/i, '_AR_Sanity.xlsx') : s.file);

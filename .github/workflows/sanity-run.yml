@@ -1,0 +1,175 @@
+# Sanity run, started from the dashboard's "Run sanity tests" button (via ui/api/run.ts) or from the Actions tab.
+# Runs the scripted layer on STAGING for one website or a whole project, writes the results into the store
+# workbooks, refreshes the dashboard data + Excel report, commits them to main and redeploys the dashboard.
+#
+# Repository secrets used:
+#   SITE_MOBILE, SITE_OTP          staging OTP test account (BinSina, HnB, Petit Bateau, Nanan)
+#   SITE_EMAIL, SITE_PASSWORD      optional: Superdry email + password test account
+#   VERCEL_TOKEN                   optional: redeploys the dashboard after the run (skipped when missing)
+name: Sanity run
+
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: Project
+        type: choice
+        options: [fashion, binsina]
+        required: true
+      site:
+        description: "Website (all = every website in the project)"
+        type: choice
+        options: [all, pbae, pbsa, nanan, superdry, binsina, hnb]
+        default: all
+      platform:
+        description: Platforms
+        type: choice
+        options: [all, Web, Mobile, Android, iOS]
+        default: all
+      priority:
+        description: Priority
+        type: choice
+        options: [all, P1, P2, P3]
+        default: all
+      requested_by:
+        description: Started from
+        type: string
+        default: Actions tab
+
+run-name: "Sanity · ${{ inputs.project }} · ${{ inputs.site }} · ${{ inputs.platform }} · ${{ inputs.priority }}"
+
+# One run at a time: runs write to the same workbooks and share the OTP test number.
+concurrency:
+  group: sanity-run
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  VERCEL_ORG_ID: team_xWGpsHOIa9y9gwYAZEcd2a6Z
+  VERCEL_PROJECT_ID: prj_eB7hKAekjIJc2d5QWbZQ2KtJOd28
+
+jobs:
+  select:
+    name: Select websites
+    runs-on: ubuntu-latest
+    outputs:
+      sites: ${{ steps.pick.outputs.sites }}
+    steps:
+      - id: pick
+        env:
+          PROJECT: ${{ inputs.project }}
+          SITE: ${{ inputs.site }}
+        run: |
+          case "$PROJECT" in
+            fashion) all='["pbae","pbsa","nanan","superdry"]' ;;
+            binsina) all='["binsina","hnb"]' ;;
+            *) echo "::error::Unknown project $PROJECT"; exit 1 ;;
+          esac
+          if [ "$SITE" = "all" ]; then
+            echo "sites=$all" >> "$GITHUB_OUTPUT"
+          elif echo "$all" | grep -q "\"$SITE\""; then
+            echo "sites=[\"$SITE\"]" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Website $SITE is not part of the $PROJECT project"; exit 1
+          fi
+
+  run:
+    name: Run ${{ matrix.site }}
+    needs: select
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        site: ${{ fromJson(needs.select.outputs.sites) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run sanity suite (staging)
+        env:
+          SITE_MOBILE: ${{ secrets.SITE_MOBILE }}
+          SITE_OTP: ${{ secrets.SITE_OTP }}
+          SITE_EMAIL: ${{ secrets.SITE_EMAIL }}
+          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
+          PLATFORM: ${{ inputs.platform != 'all' && inputs.platform || '' }}
+          PRIORITY: ${{ inputs.priority != 'all' && inputs.priority || '' }}
+          WORKERS: '4'
+          EXECUTED_BY: "GitHub Actions (${{ inputs.requested_by }})"
+        run: npm run run:site -- "${{ matrix.site }}"
+      - name: Collect changed workbooks
+        if: always()
+        run: |
+          mkdir -p out
+          git diff --name-only -- workbooks | while read -r f; do mkdir -p "out/$(dirname "$f")"; cp "$f" "out/$f"; done
+          ls -R out || true
+      # Screenshots are not uploaded: the repo is public and OTP screens can show the test number.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-${{ matrix.site }}
+          path: out/
+          if-no-files-found: ignore
+          retention-days: 3
+
+  publish:
+    name: Publish results
+    needs: run
+    if: ${{ always() && needs.run.result != 'skipped' && needs.run.result != 'cancelled' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: results-*
+          merge-multiple: true
+          path: out
+      - name: Apply results
+        run: |
+          if [ -d out/workbooks ]; then cp -v out/workbooks/*.xlsx workbooks/; else echo "No workbook changes"; fi
+      - name: Check no credentials leaked into the workbooks
+        env:
+          SITE_MOBILE: ${{ secrets.SITE_MOBILE }}
+          SITE_OTP: ${{ secrets.SITE_OTP }}
+          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
+        run: |
+          for f in workbooks/*.xlsx; do
+            for v in "$SITE_MOBILE" "$SITE_OTP" "$SITE_PASSWORD"; do
+              [ -n "$v" ] || continue
+              if unzip -p "$f" 'xl/*.xml' | grep -qF "$v"; then echo "::error::A credential value appears in $f"; exit 1; fi
+            done
+          done
+      - name: Refresh dashboard data and Excel report
+        run: |
+          npm run ui:data
+          npm run report:excel
+      - name: Commit results
+        env:
+          PROJECT: ${{ inputs.project }}
+          SITE: ${{ inputs.site }}
+        run: |
+          git config user.name "hybrid-qa-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add workbooks ui/public/data docs/reports
+          if git diff --cached --quiet; then echo "Nothing to commit"; exit 0; fi
+          git commit -m "Sanity run results: $PROJECT / $SITE (run ${{ github.run_number }})"
+          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && break; sleep 5; done
+      - name: Redeploy dashboard
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then echo "::warning::VERCEL_TOKEN not set; dashboard not redeployed"; exit 0; fi
+          cd ui
+          npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN"
