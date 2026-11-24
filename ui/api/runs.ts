@@ -1,5 +1,5 @@
 // GET /api/runs  ->  the latest "Sanity run" workflow runs (status for the dashboard).
-import { REPO, WORKFLOW, github, json } from './_github';
+import { REPO, WORKFLOW, github, json } from './_github.js';
 
 interface GhRun {
   id: number;

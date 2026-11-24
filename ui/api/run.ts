@@ -1,6 +1,6 @@
 // POST /api/run  { project, site, platform, priority, passcode }
 // Starts the "Sanity run" GitHub Actions workflow for a whole project or one website (staging only).
-import { PLATFORMS, PRIORITIES, PROJECTS, REPO, WORKFLOW, github, json, sameSecret } from './_github';
+import { PLATFORMS, PRIORITIES, PROJECTS, REPO, WORKFLOW, github, json, sameSecret } from './_github.js';
 
 export async function POST(request: Request): Promise<Response> {
   if (!process.env.GITHUB_TOKEN || !process.env.RUN_PASSCODE) {
