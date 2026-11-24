@@ -17,3 +17,4 @@ screenshots/
 ui/dist/
 .vercel/
 ui/.vercel/
+*.tsbuildinfo
