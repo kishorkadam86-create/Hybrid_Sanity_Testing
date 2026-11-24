@@ -12,3 +12,9 @@ screenshots/
 *.results-*.xlsx
 .env
 .env.*
+
+# Dashboard build output
+ui/dist/
+.vercel/
+ui/.vercel/
+*.tsbuildinfo

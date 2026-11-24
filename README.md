@@ -118,6 +118,18 @@ Secrets (never put them in the workbook): `MYSHOP_EMAIL`, `MYSHOP_PASSWORD`, `MY
 | `$env:SECTION='Account'; $env:WORKERS='1'; npm test` | OTP sign-in cases. They share one staging test number (`SITE_MOBILE` / `SITE_OTP` from a git-ignored `.env.local`), so run them with **one worker**; parallel runs cancel each other's OTP |
 | `npm run master` | Rebuild the consolidated test-case sheets in `docs/`: `Hybrid_QA_Master_TestCases.xlsx` (all sites), `Hybrid_QA_TestCases_BinSina_HnB.xlsx` (BinSina + Holland & Barrett) and `Hybrid_QA_TestCases_PB_Nanan_Superdry.xlsx` (Petit Bateau UAE/KSA, Nanan, Superdry). Each has Overview, All Test Cases and By Section tabs |
 
+**Dashboard UI (`ui/`, deployed on Vercel):** a read-only web dashboard with two projects:
+- **BinSina:** BinSina English and Arabic, plus Holland & Barrett.
+- **Fashion:** Petit Bateau UAE and KSA, Nanan, and Superdry.
+
+Each project has an overview (per store, platform and section), a filterable test-case list with per-platform results, defects, and the AI / manual queue. The data is a snapshot of the workbooks:
+- After a test run: `npm run ui:data`, then commit `ui/public/data/` and redeploy.
+- Local preview: `npm run ui:dev`.
+- Build: `npm run ui:build`.
+- The export refuses production URLs and never includes credentials. Steps keep their `${env.*}` placeholders.
+
+Vercel project settings: Root Directory `ui`, Framework Vite (see `ui/vercel.json`).
+
 **Getting started (VS Code):** clone the repo, run `npm install`, then `npm run plan` with `$env:WORKBOOK='binsina'` (or any site; add `:ar` for the Arabic store). Credentials are never stored in the repo: set them as environment variables (for example `SITE_MOBILE`, `SITE_PASSWORD`).
 
 ## 3. Where results go

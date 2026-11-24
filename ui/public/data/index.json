@@ -1,0 +1,206 @@
+{
+  "generatedAt": "2026-11-24T00:56:55.694Z",
+  "environment": "Staging",
+  "projects": [
+    {
+      "id": "binsina",
+      "name": "BinSina",
+      "tagline": "Pharmacy & health",
+      "description": "BinSina Pharmacy UAE (English + Arabic) and Holland & Barrett UAE (English)",
+      "lastRun": "2026-11-20",
+      "totals": {
+        "cases": 268,
+        "runs": 763,
+        "scripted": 237,
+        "Pass": 172,
+        "Fail": 9,
+        "Blocked": 3,
+        "AI Pending": 579,
+        "Not run": 0
+      },
+      "openDefects": 6,
+      "stores": [
+        {
+          "key": "BinSina_UAE_Sanity",
+          "site": "BinSina Pharmacy UAE",
+          "store": "English",
+          "url": "https://mcstaging-ind.binsina.ae/en/",
+          "totals": {
+            "cases": 106,
+            "runs": 289,
+            "Pass": 60,
+            "Fail": 2,
+            "Blocked": 3,
+            "AI Pending": 224,
+            "Not run": 0,
+            "scripted": 77
+          }
+        },
+        {
+          "key": "BinSina_UAE_AR_Sanity",
+          "site": "BinSina Pharmacy UAE",
+          "store": "Arabic",
+          "url": "https://mcstaging-ind.binsina.ae/ar/",
+          "totals": {
+            "cases": 83,
+            "runs": 243,
+            "Pass": 48,
+            "Fail": 3,
+            "Blocked": 0,
+            "AI Pending": 192,
+            "Not run": 0,
+            "scripted": 77
+          }
+        },
+        {
+          "key": "HollandBarrett_UAE_Sanity",
+          "site": "Holland & Barrett UAE",
+          "store": "English",
+          "url": "https://mcstaging-ind.hollandandbarrett.ae/en/",
+          "totals": {
+            "cases": 79,
+            "runs": 231,
+            "Pass": 64,
+            "Fail": 4,
+            "Blocked": 0,
+            "AI Pending": 163,
+            "Not run": 0,
+            "scripted": 83
+          }
+        }
+      ]
+    },
+    {
+      "id": "fashion",
+      "name": "Fashion",
+      "tagline": "Fashion & kidswear",
+      "description": "Petit Bateau UAE, Petit Bateau KSA, Nanan UAE (English + Arabic) and Superdry UAE (English)",
+      "lastRun": "2026-11-17",
+      "totals": {
+        "cases": 547,
+        "runs": 1599,
+        "scripted": 569,
+        "Pass": 505,
+        "Fail": 7,
+        "Blocked": 0,
+        "AI Pending": 1087,
+        "Not run": 0
+      },
+      "openDefects": 7,
+      "stores": [
+        {
+          "key": "Nanan_UAE_Sanity",
+          "site": "Nanan UAE",
+          "store": "English",
+          "url": "https://mcstaging.nananuat.com/en/",
+          "totals": {
+            "cases": 79,
+            "runs": 231,
+            "Pass": 79,
+            "Fail": 1,
+            "Blocked": 0,
+            "AI Pending": 151,
+            "Not run": 0,
+            "scripted": 80
+          }
+        },
+        {
+          "key": "Nanan_UAE_AR_Sanity",
+          "site": "Nanan UAE",
+          "store": "Arabic",
+          "url": "https://mcstaging.nananuat.com/ar/",
+          "totals": {
+            "cases": 78,
+            "runs": 228,
+            "Pass": 61,
+            "Fail": 1,
+            "Blocked": 0,
+            "AI Pending": 166,
+            "Not run": 0,
+            "scripted": 80
+          }
+        },
+        {
+          "key": "PetitBateau_KSA_Sanity",
+          "site": "Petit Bateau KSA",
+          "store": "English",
+          "url": "https://mcstaging-ksa.petit-bateauuat.com/en/",
+          "totals": {
+            "cases": 80,
+            "runs": 234,
+            "Pass": 79,
+            "Fail": 1,
+            "Blocked": 0,
+            "AI Pending": 154,
+            "Not run": 0,
+            "scripted": 80
+          }
+        },
+        {
+          "key": "PetitBateau_KSA_AR_Sanity",
+          "site": "Petit Bateau KSA",
+          "store": "Arabic",
+          "url": "https://mcstaging-ksa.petit-bateauuat.com/ar/",
+          "totals": {
+            "cases": 79,
+            "runs": 231,
+            "Pass": 67,
+            "Fail": 1,
+            "Blocked": 0,
+            "AI Pending": 163,
+            "Not run": 0,
+            "scripted": 80
+          }
+        },
+        {
+          "key": "PetitBateau_UAE_Sanity",
+          "site": "Petit Bateau UAE",
+          "store": "English",
+          "url": "https://mcstaging.petit-bateauuat.com/en/",
+          "totals": {
+            "cases": 79,
+            "runs": 231,
+            "Pass": 79,
+            "Fail": 1,
+            "Blocked": 0,
+            "AI Pending": 151,
+            "Not run": 0,
+            "scripted": 80
+          }
+        },
+        {
+          "key": "PetitBateau_UAE_AR_Sanity",
+          "site": "Petit Bateau UAE",
+          "store": "Arabic",
+          "url": "https://mcstaging.petit-bateauuat.com/ar/",
+          "totals": {
+            "cases": 78,
+            "runs": 228,
+            "Pass": 67,
+            "Fail": 1,
+            "Blocked": 0,
+            "AI Pending": 160,
+            "Not run": 0,
+            "scripted": 80
+          }
+        },
+        {
+          "key": "Superdry_UAE_Sanity",
+          "site": "Superdry UAE",
+          "store": "English",
+          "url": "https://mcstaging.superdry.ae/",
+          "totals": {
+            "cases": 74,
+            "runs": 216,
+            "Pass": 73,
+            "Fail": 1,
+            "Blocked": 0,
+            "AI Pending": 142,
+            "Not run": 0,
+            "scripted": 89
+          }
+        }
+      ]
+    }
+  ]
+}
