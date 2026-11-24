@@ -14,7 +14,10 @@
     "build:sites": "tsx src/cli/build-sites.ts",
     "env:staging": "tsx src/cli/use-staging.ts",
     "master": "tsx src/cli/build-master.ts",
-    "report:excel": "tsx src/cli/build-report.ts"
+    "report:excel": "tsx src/cli/build-report.ts",
+    "ui:data": "tsx src/cli/export-ui-data.ts",
+    "ui:dev": "npm run ui:data && npm --prefix ui run dev",
+    "ui:build": "npm run ui:data && npm --prefix ui run build"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.0",
