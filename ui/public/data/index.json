@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T10:03:15.984Z",
+  "generatedAt": "2026-11-26T12:43:18.968Z",
   "environment": "Staging",
   "projects": [
     {
@@ -24,18 +24,18 @@
           ]
         }
       ],
-      "lastRun": "2026-11-25",
+      "lastRun": "2026-11-26",
       "totals": {
         "cases": 268,
         "runs": 763,
         "scripted": 237,
-        "Pass": 121,
-        "Fail": 43,
+        "Pass": 136,
+        "Fail": 31,
         "Blocked": 0,
-        "AI Pending": 599,
+        "AI Pending": 596,
         "Not run": 0
       },
-      "openDefects": 42,
+      "openDefects": 30,
       "stores": [
         {
           "key": "BinSina_UAE_Sanity",
@@ -46,10 +46,10 @@
           "totals": {
             "cases": 106,
             "runs": 289,
-            "Pass": 42,
-            "Fail": 14,
+            "Pass": 47,
+            "Fail": 10,
             "Blocked": 0,
-            "AI Pending": 233,
+            "AI Pending": 232,
             "Not run": 0,
             "scripted": 77
           }
@@ -63,8 +63,8 @@
           "totals": {
             "cases": 83,
             "runs": 243,
-            "Pass": 34,
-            "Fail": 14,
+            "Pass": 38,
+            "Fail": 10,
             "Blocked": 0,
             "AI Pending": 195,
             "Not run": 0,
@@ -80,10 +80,10 @@
           "totals": {
             "cases": 79,
             "runs": 231,
-            "Pass": 45,
-            "Fail": 15,
+            "Pass": 51,
+            "Fail": 11,
             "Blocked": 0,
-            "AI Pending": 171,
+            "AI Pending": 169,
             "Not run": 0,
             "scripted": 83
           }
